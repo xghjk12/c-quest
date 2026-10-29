@@ -1,0 +1,51 @@
+MIT License
+
+Copyright (c) 2026 C Quest contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## 第三方组件声明
+
+本项目使用了以下第三方资源，各自的许可证如下：
+
+### Clang / LLVM（通过 @live-codes/clang-wasm 分发）
+- 许可证: Apache License 2.0 with LLVM Exceptions
+- 来源: https://llvm.org/
+- 位置: `clang/` 目录下的 WebAssembly 资源
+
+### TCC (Tiny C Compiler)
+- 许可证: LGPL 2.1
+- 来源: https://bellard.org/tcc/
+- 位置: `tools/tcc/`
+- 说明: 仅用于终端版游戏编译，网页版不依赖它
+
+### @live-codes/clang-wasm
+- 许可证: MIT
+- 来源: https://github.com/live-codes/clang-wasm
+- 说明: 提供浏览器内运行的 Clang 封装
+
+### 游戏源码（games/reference/）
+- 来源: https://github.com/hubojing/C-Language-Games
+- 说明: 用于「游戏开发大作业」的成品代码对照，版权归原作者所有
+
+### 字体 / 图标
+- 本项目使用系统字体，无外部字体文件
+- 界面图标使用 Unicode 字符，无外部图标资源

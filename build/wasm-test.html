@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>wasm 编译器隔离测试</title>
+<style>
+  body { background: #0d1117; color: #e6edf3; font-family: monospace; padding: 20px; }
+  #log { white-space: pre-wrap; line-height: 1.7; }
+  .ok { color: #3fb950; } .err { color: #f85149; } .dim { color: #8b949e; }
+</style>
+</head>
+<body>
+<h3>浏览器内 Clang 编译 —— 隔离测试</h3>
+<div id="log">启动中…</div>
+
+<script src="../wasm-compiler.js"></script>
+<script>
+const log = (msg, cls) => {
+  const d = document.getElementById('log');
+  const s = document.createElement('div');
+  if (cls) s.className = cls;
+  const t = new Date().toISOString().slice(11, 23);
+  s.textContent = `[${t}] ${msg}`;
+  d.appendChild(s);
+};
+
+async function main() {
+  if (CCompiler.isFileProtocol()) {
+    log('当前是 file:// 协议，读不到 clang 资源。请用 http 打开。', 'err');
+    window.__RESULT = { pass: false, reason: 'file-protocol' };
+    return;
+  }
+
+  const t0 = performance.now();
+  log('开始加载编译器（首次约 28MB 下载）…', 'dim');
+
+  try {
+    await CCompiler.warmup();
+    const loadMs = Math.round(performance.now() - t0);
+    log(`编译器就绪，耗时 ${loadMs}ms`, 'ok');
+
+    // 测试 1：正常程序
+    let r = await CCompiler.run(
+      '#include <stdio.h>\nint main(void){int a,b;scanf("%d %d",&a,&b);printf("%d %d\\n",b,a);return 0;}',
+      '3 5\n'
+    );
+    const ok1 = r.ok && r.stdout === '5 3\n';
+    log(`测试1 正常程序: stdout=${JSON.stringify(r.stdout)} exitCode=${r.exitCode} ` +
+        `compile=${r.compileMs}ms run=${r.runMs}ms → ${ok1 ? 'PASS' : 'FAIL'}`, ok1 ? 'ok' : 'err');
+
+    // 测试 2：编译错误
+    r = await CCompiler.run('int main(void){ return 0 }', '');
+    const ok2 = r.ok && r.errors && r.errors.length > 0;
+    log(`测试2 编译错误: ${ok2 ? '捕获到 ' + r.errors.length + ' 条错误 → PASS' : 'FAIL'}`,
+        ok2 ? 'ok' : 'err');
+
+    // 测试 3：死循环（8 秒超时）
+    const t2 = performance.now();
+    r = await CCompiler.run('int main(void){ while(1); return 0; }', '');
+    const elapsed = Math.round(performance.now() - t2);
+    const ok3 = r.timedOut === true;
+    log(`测试3 死循环: ${elapsed}ms 后 ${ok3 ? '被强制终止 → PASS' : '没被终止 → FAIL'}`,
+        ok3 ? 'ok' : 'err');
+
+    // 测试 4：超时后还能继续用
+    r = await CCompiler.run('#include <stdio.h>\nint main(void){printf("alive\\n");return 0;}', '');
+    const ok4 = r.ok && r.stdout === 'alive\n';
+    log(`测试4 恢复能力: ${JSON.stringify(r.stdout)} → ${ok4 ? 'PASS' : 'FAIL'}`, ok4 ? 'ok' : 'err');
+
+    const pass = ok1 && ok2 && ok3 && ok4;
+    log(`\n总结: ${pass ? '全部通过' : '有失败项'}，加载 ${loadMs}ms`, pass ? 'ok' : 'err');
+    window.__RESULT = { pass, loadMs, ok1, ok2, ok3, ok4 };
+  } catch (e) {
+    log('异常: ' + e.message, 'err');
+    window.__RESULT = { pass: false, reason: e.message };
+  }
+}
+
+main();
+</script>
+</body>
+</html>

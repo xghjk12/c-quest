@@ -1,0 +1,32 @@
+{
+  "name": "c-quest",
+  "version": "1.0.0",
+  "description": "C 语言闯关 - 70 道读代码题 + 40 道写代码实操题 + 5 个游戏开发大作业",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "setup": "node build/setup-wasm.js",
+    "serve": "node server.js",
+    "start": "node server.js",
+    "package": "node build/package.js",
+    "zip": "node build/make-zip.js",
+    "check": "node build/check-all.js",
+    "check:wasm": "node build/wasm-parity.js"
+  },
+  "keywords": [
+    "c",
+    "programming",
+    "education",
+    "game",
+    "quiz",
+    "wasm",
+    "clang"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@live-codes/clang-wasm": "^0.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

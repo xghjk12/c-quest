@@ -1,0 +1,36 @@
+# 统一换行符处理，避免 Windows 上提交后别人看到满屏 diff
+
+# 源码统一用 LF
+* text=auto eol=lf
+
+# 明确指定（防止被误判）
+*.js    text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.json  text eol=lf
+*.c     text eol=lf
+*.h     text eol=lf
+*.sh    text eol=lf
+*.gitignore text eol=lf
+
+# Windows 批处理必须是 CRLF，否则 cmd 解析会出问题
+*.bat   text eol=crlf
+
+# 二进制文件不做任何转换
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.gz    binary
+*.wasm  binary
+*.tar   binary
+*.exe   binary
+*.dll   binary
+*.zip   binary
+*.blend binary
+
+# 让 GitHub 正确识别语言
+*.js    linguist-language=JavaScript
+*.c     linguist-language=C
