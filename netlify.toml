@@ -1,0 +1,72 @@
+# Netlify 部署配置
+#
+# 这个文件告诉 Netlify：
+#   1. 用什么命令构建
+#   2. 构建产物在哪个目录
+#   3. 各种文件应该用什么 Content-Type
+
+[build]
+  # 安装依赖（clang-wasm 的编译器资源）
+  command = "npm install && node build/setup-wasm.js && node build/package.js"
+  # 构建产物目录
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# ============================================================
+# 响应头：这几项是实操题能跑的关键
+# ============================================================
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+
+# 编译器资源：长缓存（内容不变）
+[[headers]]
+  for = "/clang/assets/bin/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    # 这个必须对，否则浏览器解压失败，实操题用不了
+    Content-Type = "application/gzip"
+
+# 编译器前端 JS
+[[headers]]
+  for = "/clang/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# 题库和游戏源码：中等缓存
+[[headers]]
+  for = "/bank-*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/hands-on*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/games-src.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# HTML 不缓存，改完立刻生效
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# 游戏源码（纯文本）
+[[headers]]
+  for = "/games/*"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"

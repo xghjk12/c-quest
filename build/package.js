@@ -36,6 +36,7 @@ const FILES = [
   'game-projects.js',
   'game-projects-ui.js',
   'games-src.js',
+  'playground.js',
   'server.js'
 ];
 
