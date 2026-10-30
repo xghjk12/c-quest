@@ -20,7 +20,8 @@ const SHOT = path.join('D:\\c语言', 'shots');
   const checks = [];
 
   console.log('打开页面…');
-  await page.goto('http://127.0.0.1:7788/index.html', { waitUntil: 'networkidle0' });
+  const BASE = process.argv[2] || 'http://127.0.0.1:7788';
+  await page.goto(BASE + '/index.html', { waitUntil: 'networkidle0' });
 
   /* 1. 首页有入口 */
   const hasBtn = await page.evaluate(() => !!document.querySelector('#btn-playground'));
